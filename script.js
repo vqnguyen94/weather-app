@@ -21,7 +21,7 @@ const today = setDayOfTheWeek();
 
 
 //Initial call for current weather
-fetch('http://api.openweathermap.org/data/2.5/weather?q=Chicago&units=imperial&APPID=' + apiKey,
+fetch('https://api.openweathermap.org/data/2.5/weather?q=Chicago&units=imperial&APPID=' + apiKey,
 { mode: 'cors'})
     .then(function(response) {
         // console.log(response);
@@ -35,6 +35,9 @@ fetch('http://api.openweathermap.org/data/2.5/weather?q=Chicago&units=imperial&A
         lon = response.coord.lon;
         // // console.log(lat, lon);
         fetchWeeklyWeather(lat, lon);
+    })
+    .catch(function(error) {
+        console.log(error);
     });
 
 // weekly forcast
