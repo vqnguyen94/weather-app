@@ -7,17 +7,18 @@
         <link rel="stylesheet" href="styles.css">
     </head>
     <body>
-        <div>
-            <p>input box here</p>
+        <div class="input">
+            <form>
+                <input id="cityInput" type=text placeholder="Enter a city name"> 
+            </form>
+            
         </div>
         <div id="today"></div>
-        <div id="convert">
-            <div id="fahrenheit">°F</div>
-            <div id="celcius">°C</div>
+        <div class="convert">
+            <button id="fahrenheit" class="unclickable" onclick="toggleUnits()">°F</button>
+            <button id="celcius" class="units" onclick="toggleUnits()">°C</button>
         </div>
-        <div id="week">
-        </div>
-        <!-- <button onclick="convertTemperatures()">Convert</button> -->
+        <div id="week"></div>
 
     </body>
     <script src="script.js"></script>

@@ -19,7 +19,7 @@
     border: 1px solid black;
 } */
 
-#convert {
+.convert {
     height: 5vh;
     /* background: yellow; */
     display: flex;
@@ -62,4 +62,31 @@
 
 .low {
     opacity: .5;
+}
+
+.units {
+    opacity: 0.5
+}
+
+.unclickable {
+    pointer-events: none;
+}
+
+button {
+    border: none;
+    background: none;
+}
+
+.input {
+    /* background: red; */
+    display: flex;
+    justify-content: center;
+    
+}
+
+input {
+    border: none;
+    padding: .5em;
+    background: lightgray;
+    border-radius: 1em;
 }

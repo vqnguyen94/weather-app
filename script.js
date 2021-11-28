@@ -1,5 +1,4 @@
-//basic functionality down, now just design and add input. and also adopt the same workflow as you have before, everyone else doin it
-//add more weather conditions
+//add error catchin for when city isnt found, maybe dialogue box under search box and also adopt the same workflow as you have before, everyone else doin it
 const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const weatherConditions = {
     Clear: "☀️",
@@ -9,67 +8,91 @@ const weatherConditions = {
     Thunderstorm: "⛈️",
     Drizzle: "🌧️"
 };
+const units = {
+    fahrenheit: "imperial",
+    celcius: "metric"
+}
 const apiKey = '83349c2b915d83146ab6bafc2115a2fb';
 
 const current = document.getElementById("today");
 const week = document.getElementById("week");
+const input = document.getElementById('cityInput');
 
-let city, temperatureUnit, lat, lon;
+const c = document.getElementById('celcius');
+const f = document.getElementById('fahrenheit');
 
-temperatureUnit = 'F';
+const form = document.querySelector('form');
+form.addEventListener('submit', go);
+
 const today = setDayOfTheWeek();
 
+let temperatureUnit, lat, lon;
 
-//Initial call for current weather
-fetch('https://api.openweathermap.org/data/2.5/weather?q=Chicago&units=imperial&APPID=' + apiKey,
-{ mode: 'cors'})
-    .then(function(response) {
-        // console.log(response);
-        return response.json();
-    })
-    .then(function(response) {
-        let weatherData = getCurrentWeather(response);
-        displayCurrentWeather(weatherData, current);
-        //console.log(response);
-        lat = response.coord.lat;
-        lon = response.coord.lon;
-        // // console.log(lat, lon);
-        fetchWeeklyWeather(lat, lon);
-    })
-    .catch(function(error) {
-        console.log(error);
-    });
+temperatureUnit = 'fahrenheit';
 
-// weekly forcast
-// fetch('https://api.openweathermap.org/data/2.5/onecall?lat=41.85&lon=-87.65&exclude=current,minutely,hourly,alerts&units=imperial&appid=' + apiKey,
+
+
+// //Initial call for current weather
+// fetch('https://api.openweathermap.org/data/2.5/weather?q=Chicago&units=imperial&APPID=' + apiKey,
 // { mode: 'cors'})
 //     .then(function(response) {
+//         // console.log(response);
 //         return response.json();
 //     })
 //     .then(function(response) {
-//         // let weatherData = getCurrentWeather(response);
-//         // displayCurrentWeather(weatherData);
-//         console.log(response);
+//         let weatherData = getCurrentWeather(response);
+//         displayCurrentWeather(weatherData, current);
+//         //console.log(response);
+//         lat = response.coord.lat;
+//         lon = response.coord.lon;
+//         // // console.log(lat, lon);
+//         fetchWeeklyWeather(lat, lon);
+//     })
+//     .catch(function(error) {
+//         console.log(error);
 //     });
-//     // .catch(function(error) {
-//     //     console.log(error);
-//     // });
+
+fetchCityWeather('Chicago');
 
 function setDayOfTheWeek(){
     const d = new Date();
     return weekdays[d.getDay()];
 }
 
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
+async function fetchCityWeather(city){
+    
+    const response = await fetch('https://api.openweathermap.org/data/2.5/weather?q=' + city + 
+                                '&units=' + units[temperatureUnit] + '&APPID=' + apiKey, { mode: 'cors'});
+    const data = await response.json();
+    let weatherData = getCurrentWeather(data);
+    removeAllChildNodes(current);
+    displayCurrentWeather(weatherData, current);
+    //console.log(response);
+    lat = data.coord.lat;
+    lon = data.coord.lon;
+    // // console.log(lat, lon);
+    fetchWeeklyWeather(lat, lon);
+}
+
 async function fetchWeeklyWeather(lat, lon){
+    
     const response = await fetch('https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + 
-                                '&lon=' + lon + '&exclude=current,minutely,hourly,alerts&units=imperial&appid=' + apiKey, { mode: 'cors'});
+                                '&lon=' + lon + '&exclude=current,minutely,hourly,alerts&units=' + units[temperatureUnit] + '&appid=' + apiKey, { mode: 'cors'});
     //console.log("now this is the weekly call");
-    console.log(response);
+    //console.log(response);
     const data = await response.json();
     //console.log(data);
     const weeklyData = getWeeklyWeather(data);
     //const weatherData = getCurrentWeather(data);
+    removeAllChildNodes(week);
     displayWeeklyWeather(weeklyData, week);
+    
 }
 
 //dt is the current day
@@ -197,9 +220,28 @@ function convertTemperatures(){
     const temperatures = document.querySelectorAll('.temperature');
     for (let i = 0; i < temperatures.length; i++) {
         let number = parseInt(temperatures[i].textContent); 
-        temperatureUnit == 'F' ? number = convertFToC(number) : number = convertCToF(number);
+        temperatureUnit == 'fahrenheit' ? number = convertFToC(number) : number = convertCToF(number);
         temperatures[i].textContent = number;
     }
-    temperatureUnit == 'F' ? temperatureUnit = 'C' : temperatureUnit = 'F';
+    temperatureUnit == 'fahrenheit' ? temperatureUnit = 'celcius' : temperatureUnit = 'fahrenheit';
     document.getElementById('currentTemp').textContent = document.getElementById('currentTemp').textContent + "°";
 }
+
+
+function toggleUnits(){
+    c.classList.toggle("units");
+    f.classList.toggle("units");
+    c.classList.toggle("unclickable");
+    f.classList.toggle("unclickable");
+    convertTemperatures();
+}
+
+
+function go(event){
+    const city = input.value;
+    fetchCityWeather(city);
+    event.preventDefault();
+    form.reset();
+}
+
+
