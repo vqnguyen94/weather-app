@@ -1,0 +1,65 @@
+#today {
+    /* background: blue; */
+    height: 30vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#week {
+    /* background: red; */
+    height: 55vh;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    padding: 0.5em;
+}
+
+/* p {
+    border: 1px solid black;
+} */
+
+#convert {
+    height: 5vh;
+    /* background: yellow; */
+    display: flex;
+    justify-content: center;
+}
+
+#fahrenheit, #celcius {
+    /* border: solid 1px black; */
+    margin: .5em;
+}
+
+.condition {
+    justify-self: center;
+    grid-column: 3/4;
+}
+
+.temperature {
+    justify-self: end;
+}
+
+.degree {
+    display: inline;
+}
+
+.city {
+    font-size: 2em;
+    margin: 0;
+}
+
+#today > .temperature {
+    font-size: 5em;
+    margin: 0;
+    /* background: red; */
+    padding-left: 0.4em;
+}
+
+#today > .condition {
+    margin: 0;
+}
+
+.low {
+    opacity: .5;
+}
